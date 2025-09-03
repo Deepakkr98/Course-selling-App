@@ -70,7 +70,7 @@ router.post("/decrease", async (req, res) => {
  router.delete("/:userId/:courseId", async(req, res)=>{
   try {
     const {userId, courseId} = req.params;
-    await Cart.deleteOne({userId, courseId});
+    await Cart.findByIdAndDelete({userId, courseId});
     res.json({message:"Course removed from cart"});
     
   } catch (err) {
