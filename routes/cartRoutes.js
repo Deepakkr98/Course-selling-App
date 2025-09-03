@@ -65,16 +65,22 @@ router.post("/decrease", async (req, res) => {
   }
 });
 
- // Remove product : /api/cart/user1/courseId
+ // Remove product : /api/cart/userId/courseId
 
  router.delete("/:userId/:courseId", async(req, res)=>{
   try {
     const {userId, courseId} = req.params;
-    await Cart.findByIdAndDelete({userId, courseId});
-    res.json({message:"Course removed from cart"});
+    console.log(userId, courseId);
+    const response = await Cart.findOneAndDelete({
+      userId,
+      courseId
+    });
+
+   console.log(response)
+    res.json(response);
     
   } catch (err) {
-    err.status(500).json({error: err.message});
+    res.status(500).json({error: err.message});
     
   }
  })
