@@ -53,7 +53,7 @@ router.post("/decrease", async (req, res) => {
 });
 
 
- // Get cart : /api/cart/user1
+ // Get cart : /api/cart/userId
 
  router.get("/:userId", async (req, res) => {
   try {
