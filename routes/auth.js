@@ -53,4 +53,71 @@ router.post("/login",async(req, res)=>{
   }
 });
 
+// Get all user : /api/auth/users
+router.get("/users", async(req, res)=>{
+  try{
+      const users = await User.find().select("-password");
+      res.status(200).json(users);
+  }catch(err){
+    res.status(500).json({message: err.message});
+  }
+});
+
+// Get Single User by id :  /api/auth/users/:id
+router.get("/users/:id",async (req,res)=>{
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if(!user){
+      return res.status(404).json({message:"User not found"});
+    }
+    res.json(200).json(user);
+    
+  } catch (err) {
+    res.status(500).json({message: err.message});
+  }
+});
+
+// Update user : /api/auth/users/:id
+
+router.put("/users/:id", async(req,res) =>{
+  try {
+    const {name,email, password, role} = req.body;
+    const updateData = {name , email, role};
+
+    // if password update then firstly hash
+    if(password){
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        updateData,
+        {new:true}
+      ).select("-password");
+    }
+    if(!updatedUser){
+      return res.status(404).json({message: "User not found"});
+    }
+    res.status(200).json(updatedUser);
+    
+  } catch (err) {
+    res.json(err).json({message: err.message});
+    
+  }
+
+});
+
+// Delete user : /api/auth/users/:id
+
+router.delete("/users/:id", async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+
 export default router;
